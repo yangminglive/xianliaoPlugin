@@ -12,7 +12,7 @@ module.exports = {
         IMAGE:   4,
         MUSIC:   5,
         VIDEO:   6,
-        WEBPAGE: 7,
+        LINK:    7,
         MINI:    8
     },
 

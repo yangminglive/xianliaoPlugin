@@ -1,4 +1,4 @@
-package com.jiahua.xianliao.sgapi;
+package __PACKAGE_NAME__;
 
 import android.app.Activity;
 
@@ -62,7 +62,7 @@ public class SGEntryActivity extends Activity implements ISGAPIEventHandler {
 
     @Override
     public void onResp(BaseResp resp) {
-        Log.d(JhXianliao.TAG, resp.toString());
+        Log.i(JhXianliao.TAG, resp.toString());
         CallbackContext ctx = JhXianliao.getCurrentCallbackContext();
         if (ctx == null) {
             startMainActivity();
@@ -126,7 +126,7 @@ public class SGEntryActivity extends Activity implements ISGAPIEventHandler {
      */
     protected void auth(BaseResp resp) {
         SendAuth.Resp res = ((SendAuth.Resp) resp);
-        Log.d(JhXianliao.TAG, res.toString());
+        Log.i(JhXianliao.TAG, res.toString());
 
         // get current callback context
         CallbackContext ctx = JhXianliao.getCurrentCallbackContext();

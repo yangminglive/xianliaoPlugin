@@ -39,7 +39,7 @@ public class JhXianliao extends CordovaPlugin{
     public static final String TAG = "Cordova.Plugin.Xianliao";
 
     public static final String PREFS_NAME = "Cordova.Plugin.Xianliao";
-    public static final String XLAPPID_PROPERTY_KEY = "xlappid";
+    public static final String XLAPPID_PROPERTY_KEY = "XLAPPID";
 
     public static final String EXTERNAL_STORAGE_IMAGE_PREFIX = "external://";
     public static final int REQUEST_CODE_ENABLE_PERMISSION = 55433;
@@ -108,12 +108,27 @@ public class JhXianliao extends CordovaPlugin{
         // save app id
         saveAppId(cordova.getActivity(), id);
         initXlAPI();
-        Log.d(TAG, "plugin initialized.");
+        Log.i(TAG, "plugin initialized. id="+getSavedAppId(cordova.getActivity()));
+    }
+
+
+    /**
+     * 初始化闲聊的API
+     */
+    protected void initXlAPI() {
+        ISGAPI api = getXlAPI(cordova.getActivity());
+        if(xl_preferences == null) {
+            xl_preferences = preferences;
+        }
+        if (api != null) {
+            xlAPI = api;
+        //    api.registerApp(getAppId(preferences));
+        }
     }
 
     @Override
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
-        Log.d(TAG, String.format("%s is called. Callback ID: %s.", action, callbackContext.getCallbackId()));
+        Log.i(TAG, String.format("%s is called. Callback ID: %s.", action, callbackContext.getCallbackId()));
 
         if (action.equals("share")) {
             return share(args, callbackContext);
@@ -295,18 +310,6 @@ public class JhXianliao extends CordovaPlugin{
     }
 
 
-    /**
-     * 初始化闲聊的API
-     */
-    protected void initXlAPI() {
-        ISGAPI api = getXlAPI(cordova.getActivity());
-        if(xl_preferences == null) {
-            xl_preferences = preferences;
-        }
-        if (api != null) {
-            api.registerApp(getAppId(preferences));
-        }
-    }
 
     /**
      * 获取闲聊API
@@ -316,7 +319,7 @@ public class JhXianliao extends CordovaPlugin{
     public static ISGAPI getXlAPI(Context ctx) {
         if (xlAPI == null) {
             String appId = getSavedAppId(ctx);
-
+            Log.i(TAG,"get xl api appid="+appId);
             if (!appId.isEmpty()) {
                 xlAPI = SGAPIFactory.createSGAPI(ctx,appId);
             }
@@ -410,7 +413,7 @@ public class JhXianliao extends CordovaPlugin{
             // scale
             if (maxSize > 0 && (options.outWidth > maxSize || options.outHeight > maxSize)) {
 
-                Log.d(TAG, String.format("Bitmap was decoded, dimension: %d x %d, max allowed size: %d.",
+                Log.i(TAG, String.format("Bitmap was decoded, dimension: %d x %d, max allowed size: %d.",
                         options.outWidth, options.outHeight, maxSize));
 
                 int width = 0;
@@ -487,14 +490,14 @@ public class JhXianliao extends CordovaPlugin{
                 File file = Util.downloadAndCacheFile(webView.getContext(), url);
 
                 if (file == null) {
-                    Log.d(TAG, String.format("File could not be downloaded from %s.", url));
+                    Log.i(TAG, String.format("File could not be downloaded from %s.", url));
                     return null;
                 }
 
                 // url = file.getAbsolutePath();
                 inputStream = new FileInputStream(file);
 
-                Log.d(TAG, String.format("File was downloaded and cached to %s.", file.getAbsolutePath()));
+                Log.i(TAG, String.format("File was downloaded and cached to %s.", file.getAbsolutePath()));
 
             } else if (url.startsWith("data:image")) {  // base64 image
 
@@ -502,26 +505,26 @@ public class JhXianliao extends CordovaPlugin{
                 byte imageBytes[] = Base64.decode(imageDataBytes.getBytes(), Base64.DEFAULT);
                 inputStream = new ByteArrayInputStream(imageBytes);
 
-                Log.d(TAG, "Image is in base64 format.");
+                Log.i(TAG, "Image is in base64 format.");
 
             } else if (url.startsWith(EXTERNAL_STORAGE_IMAGE_PREFIX)) { // external path
 
                 url = Environment.getExternalStorageDirectory().getAbsolutePath() + url.substring(EXTERNAL_STORAGE_IMAGE_PREFIX.length());
                 inputStream = new FileInputStream(url);
 
-                Log.d(TAG, String.format("File is located on external storage at %s.", url));
+                Log.i(TAG, String.format("File is located on external storage at %s.", url));
 
             } else if (!url.startsWith("/")) { // relative path
 
                 inputStream = cordova.getActivity().getApplicationContext().getAssets().open(url);
 
-                Log.d(TAG, String.format("File is located in assets folder at %s.", url));
+                Log.i(TAG, String.format("File is located in assets folder at %s.", url));
 
             } else {
 
                 inputStream = new FileInputStream(url);
 
-                Log.d(TAG, String.format("File is located at %s.", url));
+                Log.i(TAG, String.format("File is located at %s.", url));
 
             }
 

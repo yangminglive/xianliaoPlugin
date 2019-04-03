@@ -8,6 +8,8 @@
     <js-module name="jhxianliao" src="www/xianliaoPlugin.js">
         <clobbers target="jhxianliao" />
     </js-module>
+	 <!-- add this to your config.xml -->
+	<preference name="XLAPPID" />
 	
 	<!-- android配置 -->
 	<platform name="android">
@@ -50,8 +52,65 @@
 		
         <source-file src="src/android/JhXianliao.java" target-dir="src/com/jiahua/xianliao"/>
 		<source-file src="src/android/Util.java" target-dir="src/com/jiahua/xianliao" />
-        <framework src="android-build.gradle" custom="true" type="gradleReference" />
+        <lib-file src="src/android/xianliaosdk_1.0.7.jar"/>
     </platform>
 	
+	
 	<!-- ios配置-->
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="JhXianliao">
+                <param name="ios-package" value="CDVXianliao"/>
+                <param name="onload" value="true" />
+            </feature>
+            <preference name="XLAPPID" value="$XLAPPID"/>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+            <array>
+                <string>xianliao</string>
+            </array>
+        </config-file>
+
+        <config-file target="*-Info.plist" parent="NSAppTransportSecurity">
+            <dict>
+                <key>NSAllowsArbitraryLoads</key>
+                <true/>
+            </dict>
+        </config-file>
+
+
+        <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+            <array>
+                <dict>
+                    <key>CFBundleURLName</key>
+                    <string>xianliao</string>
+                    <key>CFBundleURLSchemes</key>
+                    <array>
+                        <string>xianliao$XLAPPID</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+
+        <!-- Plugin source code -->
+        <header-file src="src/ios/CDVXianliao.h" />
+        <source-file src="src/ios/CDVXianliao.m" />
+
+        <!-- xianliao Official -->
+        <header-file src="src/ios/libs/XiaoliaoSDK_iOS/XianliaoApiManager.h" />
+        <header-file src="src/ios/libs/XiaoliaoSDK_iOS/XianliaoApiObject.h" />
+        <source-file src="src/ios/libs/XiaoliaoSDK_iOS/xianliaoApi.a" framework="true" />
+
+        <!-- Other required frameworks -->
+        <framework src="libz.tbd" />
+        <framework src="libsqlite3.0.tbd" />
+        <framework src="CoreTelephony.framework" />
+        <framework src="SystemConfiguration.framework" />
+        <framework src="Security.framework" />
+        <framework src="CFNetwork.framework" />
+        <framework src="libc++.1.tbd" />
+    </platform>
+
+	
 </plugin>
