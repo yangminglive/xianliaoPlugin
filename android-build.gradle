@@ -1,9 +1,10 @@
 ﻿repositories {
     maven{
-		url 'http://119.23.15.204:8081/repository/maven-snapshots/'
+		url 'http://119.23.15.204:8081/repository/maven-public/'
 	}
+	jcenter()
 }
 
 dependencies {
-    compile 'org.xianliao:xianliaosdk:1.0.7-SNAPSHOT'
+    compile 'org.xianliao:xianliaosdk:1.0.7'
 }
